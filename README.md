@@ -17,17 +17,29 @@ Replace this paragraph with your own summary of what your version does.
 
 ## How The System Works
 
-Explain your design in plain language.
+Real-world recommendation systems learn from many signals, including what users listen to, skip, save, or add to playlists, as well as the attributes of each song. They often combine collaborative filtering, which finds patterns across users, with content-based filtering, which compares song features. Our simulation will focus on a simple, explainable content-based approach: it will prioritize matching a user's favorite genre and mood, then use numerical audio features such as energy, tempo, valence, danceability, and acousticness to rank songs by how closely they fit the user's preferences.
 
-Some prompts to answer:
+The `Song` object will use these features:
 
-- What features does each `Song` use in your system
-  - For example: genre, mood, energy, tempo
-- What information does your `UserProfile` store
-- How does your `Recommender` compute a score for each song
-- How do you choose which songs to recommend
+- `id`
+- `title`
+- `artist`
+- `genre`
+- `mood`
+- `energy`
+- `tempo_bpm`
+- `valence`
+- `danceability`
+- `acousticness`
 
-You can include a simple diagram or bullet list if helpful.
+The `UserProfile` object will store:
+
+- `favorite_genre`
+- `favorite_mood`
+- `target_energy`
+- `likes_acoustic`
+
+The recommender will calculate a weighted score for each song. Exact genre and mood matches will receive the strongest points, while numerical features will receive higher scores when they are closer to the user's preferences. Songs will then be sorted by score, and the highest-scoring songs will be recommended.
 
 ---
 
@@ -41,6 +53,8 @@ You can include a simple diagram or bullet list if helpful.
    python -m venv .venv
    source .venv/bin/activate      # Mac or Linux
    .venv\Scripts\activate         # Windows
+
+   ```
 
 2. Install dependencies
 
@@ -79,7 +93,7 @@ Paste a sample of your recommender's output here as a text block so a reader can
 #   3. ...
 ```
 
-**Screenshot or video** *(optional)*: <!-- Insert a screenshot or demo video link here -->
+**Screenshot or video** _(optional)_: <!-- Insert a screenshot or demo video link here -->
 
 ---
 
@@ -117,6 +131,3 @@ Write 1 to 2 paragraphs here about what you learned:
 
 - about how recommenders turn data into predictions
 - about where bias or unfairness could show up in systems like this
-
-
-
