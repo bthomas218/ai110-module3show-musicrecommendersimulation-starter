@@ -2,16 +2,9 @@
 
 ## Project Summary
 
-In this project you will build and explain a small music recommender system.
-
-Your goal is to:
-
-- Represent songs and a user "taste profile" as data
-- Design a scoring rule that turns that data into recommendations
-- Evaluate what your system gets right and wrong
-- Reflect on how this mirrors real world AI recommenders
-
-Replace this paragraph with your own summary of what your version does.
+This project is a small, explainable music recommender. It compares user
+preferences with 18 songs in a CSV catalog. It scores each song and prints the
+top five recommendations with short explanations.
 
 ---
 
@@ -42,15 +35,17 @@ The updated `UserProfile` will store the user's main categorical preferences and
 - `target_danceability`
 - `likes_acoustic`
 
-This remains a deliberately small, explainable profile. Mood is weighted slightly more than genre because it better represents what the user wants right now, while genre still prevents recommendations from feeling musically unrelated.
+This remains a deliberately small, explainable profile. Energy is currently
+the strongest numeric preference. Genre and mood still add important exact
+match bonuses.
 
 ### Algorithm Recipe
 
 For every song in `data/songs.csv`:
 
 1. Award 30 points for an exact mood match.
-2. Award 25 points for an exact genre match.
-3. Add up to 20 points for how closely the song's energy matches `target_energy`.
+2. Award 12.5 points for an exact genre match.
+3. Add up to 40 points for how closely the song's energy matches `target_energy`.
 4. Add up to 10 points for valence similarity.
 5. Add up to 7 points for matching the user's acoustic preference.
 6. Add up to 5 points for tempo similarity.
@@ -59,7 +54,10 @@ For every song in `data/songs.csv`:
 
 The numerical feature scores will be normalized so that closer values receive more points. After every song has been scored, the system will sort the results from highest to lowest and return the top `k` recommendations.
 
-Potential bias: this system may over-prioritize the user's declared genre and mood, causing it to miss excellent songs from other genres or songs that match the user's current mood but not their favorite genre. The small catalog, fixed labels, and limited profile also bias results toward songs whose features happen to be represented in the dataset. A boolean `likes_acoustic` preference may further oversimplify a preference that is usually gradual rather than all-or-nothing.
+Potential bias: the energy weight can push energetic songs above better mood or
+genre matches. The small catalog and fixed labels can also hide useful songs
+from underrepresented genres. The boolean `likes_acoustic` preference is a
+simple approximation of a more gradual taste.
 
 ---
 
@@ -67,25 +65,17 @@ Potential bias: this system may over-prioritize the user's declared genre and mo
 
 ### Setup
 
-1. Create a virtual environment (optional but recommended):
+1. Install [uv](https://docs.astral.sh/uv/getting-started/installation/) if it
+   is not already installed.
 
    ```bash
-   python -m venv .venv
-   source .venv/bin/activate      # Mac or Linux
-   .venv\Scripts\activate         # Windows
-
+   uv sync
    ```
 
-2. Install dependencies
+2. Run the recommender:
 
 ```bash
-pip install -r requirements.txt
-```
-
-3. Run the app:
-
-```bash
-python -m src.main
+uv run python src/main.py
 ```
 
 ### Running Tests
@@ -93,7 +83,7 @@ python -m src.main
 Run the starter tests with:
 
 ```bash
-pytest
+uv run pytest
 ```
 
 You can add more tests in `tests/test_recommender.py`.
@@ -105,32 +95,25 @@ You can add more tests in `tests/test_recommender.py`.
 ```text
 Loaded songs: 18
 
-Top recommendations:
+High-Energy Pop - Top recommendations:
 
-Sunrise City - Score: 74.60
-Because: genre match (+25.0); mood match (+30.0); energy similarity (+19.6)
-
-Rooftop Lights - Score: 49.20
-Because: genre mismatch (+0.0); mood match (+30.0); energy similarity (+19.2)
-
-Gym Hero - Score: 42.40
-Because: genre match (+25.0); mood mismatch (+0.0); energy similarity (+17.4)
-
-Night Drive Loop - Score: 19.00
-Because: genre mismatch (+0.0); mood mismatch (+0.0); energy similarity (+19.0)
-
-Velvet Calle - Score: 18.60
-Because: genre mismatch (+0.0); mood mismatch (+0.0); energy similarity (+18.6)
+Sunrise City - Score: 104.64
+Rooftop Lights - Score: 89.66
+Gym Hero - Score: 69.41
+Velvet Calle - Score: 59.03
+Neon Gravity - Score: 57.31
 ```
 
-**Screenshot or video** _(optional)_: <!-- Insert a screenshot or demo video link here -->
+The full profile output is recorded in the Experiments section below. The
+adversarial logs there were captured before the later energy-weight change.
 
 ---
 
 ## Experiments You Tried
 
 The recommender was tested with adversarial profiles designed to expose
-unexpected scoring behavior.
+unexpected scoring behavior. The scores in these logs document that earlier
+experiment; I also tried doubling the energy and halving the genreweight, but it did not result in any significant differenes. Run `uv run python src/main.py` for current scores.
 
 ### Conflicting High-Energy Sad
 
@@ -215,25 +198,20 @@ profile from producing ties.
 
 ## Limitations and Risks
 
-Summarize some limitations of your recommender.
-
-Examples:
-
-- It only works on a tiny catalog
-- It does not understand lyrics or language
-- It might over favor one genre or mood
-
-You will go deeper on this in your model card.
+The recommender only works with this small catalog. It does not understand
+lyrics, language, or listening history. Exact labels can miss related songs.
+Invalid profile values can make similarity scores drop to zero. High-energy
+songs can also appear for users who wanted a specific mood instead.
 
 ---
 
 ## Reflection
 
-Read and complete `model_card.md`:
+My biggest learning moment was how weights turn preferences into scores. Small weight
+changes can change the results without changing the songs. The experiments
+also showed that a simple recommender can repeat the same songs for different
+users and create a narrow filter bubble. AI tools helped me explore more complex ranking methods than the
+Initial implementation, but I had to be careful to avoid overfitting to the small catalog. I also learned that a simple, explainable system can still be useful for understanding how recommendations are made. If I extened this project the first thing I would do is make reccomandations based off listening history; There is a concept of "revealed preference" where a user may not know what they like until they hear it. I would also add more songs to the catalog and include more features, such as lyrics, language, and user ratings.
 
-[**Model Card**](model_card.md)
-
-Write 1 to 2 paragraphs here about what you learned:
-
-- about how recommenders turn data into predictions
-- about where bias or unfairness could show up in systems like this
+See the completed [model card](model_card.md) for the profile comparisons and
+future improvement ideas.

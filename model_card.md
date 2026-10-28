@@ -2,74 +2,64 @@
 
 ## 1. Model Name
 
-Give your model a short, descriptive name.  
-Example: **VibeFinder 1.0**
+**VibeMatch 1.0**
 
 ---
 
-## 2. Intended Use
+## 2. Goal / Task
 
-Describe what your recommender is designed to do and who it is for.
+VibeMatch suggests songs for a user. It compares user preferences with song
+features. It returns the five highest-scoring songs.
 
-Prompts:
+### Intended Use
 
-- What kind of recommendations does it generate
-- What assumptions does it make about the user
-- Is this for real users or classroom exploration
+This system is for classroom learning. It shows how simple recommendation rules
+work. It can suggest songs for a small music collection.
+
+### Non-Intended Use
+
+This system is not a production music service. It should not make important
+decisions about people. It should not be treated as a complete measure of a
+person's taste.
 
 ---
 
-## 3. How the Model Works
+## 3. Algorithm Summary
 
-The recommender compares each song with the user's preferred genre, mood, and
-audio targets. A song receives 25 points for matching the preferred genre and
-30 points for matching the preferred mood. It also receives points when its
-energy, valence, tempo, or danceability is close to the user's target values.
-If the user has an acoustic preference, the model includes that as well.
+The recommender compares each song with the user's preferences. A mood match is
+worth 30 points. A genre match is worth 12.5 points. Energy can add up to 40
+points. Valence can add up to 10 points. Tempo can add up to 5 points.
+Danceability can add up to 3 points. Acoustic preference can add up to 7 points.
 
-Songs that match more of the user's preferences receive higher scores. The
-model sorts all songs from highest to lowest score and returns the top results,
-along with short reasons explaining the matches. This is a simple,
-rule-based approach: it does not learn from listening history or try to
-understand a song beyond the features recorded in the catalog.
+Closer numeric values receive more points. Exact genre and mood matches receive
+their full bonus. The model sorts songs by total score. It also explains why a
+song received its score. It does not learn from listening history.
 
 ---
 
 ## 4. Data
 
-Describe the dataset the model uses.
-
-Prompts:
-
-- How many songs are in the catalog
-- What genres or moods are represented
-- Did you add or remove data
-- Are there parts of musical taste missing in the dataset
+The catalog has 18 songs. Each song has an ID, title, artist, genre, mood,
+energy, tempo, valence, danceability, and acousticness. Most genres appear only
+once. Lofi has three songs, and pop has two songs. This is a small sample.
+It does not include lyrics, listening history, skips, or user ratings.
 
 ---
 
 ## 5. Strengths
 
-Where does your system seem to work well
-
-Prompts:
-
-- User types for which it gives reasonable results
-- Any patterns you think your scoring captures correctly
-- Cases where the recommendations matched your intuition
+The system is easy to understand. The score gives clear reasons for each song.
+It works well when a user gives realistic energy and mood values. It also makes
+clear changes when the user changes from low energy to high energy.
 
 ---
 
 ## 6. Limitations and Bias
 
-One weakness discovered during the adversarial-profile experiment is that the
-energy score can dominate the recommendations because it is worth up to 40
-points (after doubling), more than any other single feature. This can cause high-energy users to
-receive songs with the right intensity but the wrong genre or mood. The system
-also treats genre and mood as exact text matches, so related labels such as
-`pop` and `indie pop` are considered completely different. As a result, the
-recommender may create a narrow filter bubble instead of offering diverse
-musical alternatives.
+Energy can dominate the results because it is worth up to 40 points. A song can
+have the right energy but the wrong mood. Genre and mood use exact text
+matches. For example, `pop` and `indie pop` are different labels. The small
+catalog can also favor the genres and moods that have more songs.
 
 ---
 
@@ -157,23 +147,16 @@ the mathematical comparison because several of its numbers are strong.
 
 ## 8. Future Work
 
-Ideas for how you would improve the model next.
-
-Prompts:
-
-- Additional features or preferences
-- Better ways to explain recommendations
-- Improving diversity among the top results
-- Handling more complex user tastes
+I would validate all user values before scoring them. I would group related
+genres and moods. I would add a diversity rule so one artist or style does not
+fill the whole list.
 
 ---
 
 ## 9. Personal Reflection
 
-A few sentences about your experience.
-
-Prompts:
-
-- What you learned about recommender systems
-- Something unexpected or interesting you discovered
-- How this changed the way you think about music recommendation apps
+I learned that small weight changes can change recommendation scores quickly.
+I was surprised that `Gym Hero` appeared for many different profiles. Its high
+energy and danceability made it strong even when its mood did not match. This
+showed me that recommendation results depend heavily on the rules chosen by the
+designer.
