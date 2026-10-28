@@ -59,8 +59,8 @@ def score_song(user_prefs: Dict, song: Dict) -> Tuple[float, List[str]]:
     genre = user_prefs.get("genre", user_prefs.get("favorite_genre"))
     if genre is not None:
         if song.get("genre") == genre:
-            score += 25.0
-            reasons.append("genre match (+25.0)")
+            score += 12.5
+            reasons.append("genre match (+12.5)")
         else:
             reasons.append("genre mismatch (+0.0)")
 
@@ -78,7 +78,7 @@ def score_song(user_prefs: Dict, song: Dict) -> Tuple[float, List[str]]:
 
     energy = user_prefs.get("energy", user_prefs.get("target_energy"))
     if energy is not None:
-        points = similarity(float(song["energy"]), float(energy)) * 20.0
+        points = similarity(float(song["energy"]), float(energy)) * 40.0
         score += points
         reasons.append(f"energy similarity (+{points:.1f})")
 

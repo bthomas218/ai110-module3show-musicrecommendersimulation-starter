@@ -129,11 +129,87 @@ Because: genre mismatch (+0.0); mood mismatch (+0.0); energy similarity (+18.6)
 
 ## Experiments You Tried
 
-Use this section to document the experiments you ran. For example:
+The recommender was tested with adversarial profiles designed to expose
+unexpected scoring behavior.
 
-- What happened when you changed the weight on genre from 2.0 to 0.5
-- What happened when you added tempo or valence to the score
-- How did your system behave for different types of users
+### Conflicting High-Energy Sad
+
+```text
+Gym Hero - Score: 63.39
+Because: genre match (+25.0); mood mismatch (+0.0); energy similarity (+19.4); valence similarity (+8.7); tempo similarity (+1.0); danceability similarity (+2.6); acousticness preference (+6.6)
+Sunrise City - Score: 60.91
+Because: genre match (+25.0); mood mismatch (+0.0); energy similarity (+18.4); valence similarity (+9.4); tempo similarity (+0.0); danceability similarity (+2.4); acousticness preference (+5.7)
+Neon Gravity - Score: 38.77
+Because: genre mismatch (+0.0); mood mismatch (+0.0); energy similarity (+19.0); valence similarity (+9.9); tempo similarity (+0.7); danceability similarity (+2.8); acousticness preference (+6.4)
+Storm Runner - Score: 36.55
+Because: genre mismatch (+0.0); mood mismatch (+0.0); energy similarity (+19.8); valence similarity (+5.8); tempo similarity (+2.7); danceability similarity (+2.0); acousticness preference (+6.3)
+Iron Horizon - Score: 35.17
+Because: genre mismatch (+0.0); mood mismatch (+0.0); energy similarity (+18.6); valence similarity (+4.2); tempo similarity (+4.0); danceability similarity (+1.7); acousticness preference (+6.7)
+```
+
+### Extreme Values
+
+```text
+Glass Cathedral - Score: 32.61
+Because: genre match (+25.0); mood mismatch (+0.0); energy similarity (+0.0); valence similarity (+0.0); tempo similarity (+0.0); danceability similarity (+1.0); acousticness preference (+6.6)
+Spacewalk Thoughts - Score: 6.71
+Because: genre mismatch (+0.0); mood mismatch (+0.0); energy similarity (+0.0); valence similarity (+0.0); tempo similarity (+0.0); danceability similarity (+0.3); acousticness preference (+6.4)
+Coffee Shop Stories - Score: 6.23
+Because: genre mismatch (+0.0); mood mismatch (+0.0); energy similarity (+0.0); valence similarity (+0.0); tempo similarity (+0.0); danceability similarity (+0.0); acousticness preference (+6.2)
+Library Rain - Score: 6.02
+Because: genre mismatch (+0.0); mood mismatch (+0.0); energy similarity (+0.0); valence similarity (+0.0); tempo similarity (+0.0); danceability similarity (+0.0); acousticness preference (+6.0)
+Focus Flow - Score: 5.46
+Because: genre mismatch (+0.0); mood mismatch (+0.0); energy similarity (+0.0); valence similarity (+0.0); tempo similarity (+0.0); danceability similarity (+0.0); acousticness preference (+5.5)
+```
+
+### No Matching Categories
+
+```text
+After the Rain - Score: 19.20
+Because: genre mismatch (+0.0); mood mismatch (+0.0); energy similarity (+19.2)
+Backroad Letters - Score: 18.40
+Because: genre mismatch (+0.0); mood mismatch (+0.0); energy similarity (+18.4)
+Midnight Coding - Score: 18.40
+Because: genre mismatch (+0.0); mood mismatch (+0.0); energy similarity (+18.4)
+Focus Flow - Score: 18.00
+Because: genre mismatch (+0.0); mood mismatch (+0.0); energy similarity (+18.0)
+Wildflower Road - Score: 17.80
+Because: genre mismatch (+0.0); mood mismatch (+0.0); energy similarity (+17.8)
+```
+
+### Minimal Profile
+
+```text
+Sunrise City - Score: 25.00
+Because: genre match (+25.0)
+Gym Hero - Score: 25.00
+Because: genre match (+25.0)
+Midnight Coding - Score: 0.00
+Because: genre mismatch (+0.0)
+Storm Runner - Score: 0.00
+Because: genre mismatch (+0.0)
+Library Rain - Score: 0.00
+Because: genre mismatch (+0.0)
+```
+
+### Contradictory Acoustic
+
+```text
+Storm Runner - Score: 75.50
+Because: genre match (+25.0); mood match (+30.0); energy similarity (+19.8); acousticness preference (+0.7)
+Gym Hero - Score: 49.75
+Because: genre mismatch (+0.0); mood match (+30.0); energy similarity (+19.4); acousticness preference (+0.4)
+Sunrise City - Score: 19.66
+Because: genre mismatch (+0.0); mood mismatch (+0.0); energy similarity (+18.4); acousticness preference (+1.3)
+Rooftop Lights - Score: 19.65
+Because: genre mismatch (+0.0); mood mismatch (+0.0); energy similarity (+17.2); acousticness preference (+2.4)
+Neon Gravity - Score: 19.56
+Because: genre mismatch (+0.0); mood mismatch (+0.0); energy similarity (+19.0); acousticness preference (+0.6)
+```
+
+These results show that the scorer treats each preference independently. It
+does not detect contradictions, validate feature ranges, or prevent a sparse
+profile from producing ties.
 
 ---
 
