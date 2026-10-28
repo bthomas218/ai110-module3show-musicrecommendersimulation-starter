@@ -59,9 +59,62 @@ def score_song(user_prefs: Dict, song: Dict) -> Tuple[float, List[str]]:
     Scores a single song against user preferences.
     Required by recommend_songs() and src/main.py
     """
-    # TODO: Implement scoring logic using your Algorithm Recipe from Phase 2.
-    # Expected return format: (score, reasons)
-    return []
+    score = 0.0
+    reasons = []
+
+    genre = user_prefs.get("genre", user_prefs.get("favorite_genre"))
+    if genre is not None:
+        if song.get("genre") == genre:
+            score += 25.0
+            reasons.append("genre match (+25.0)")
+        else:
+            reasons.append("genre mismatch (+0.0)")
+
+    mood = user_prefs.get("mood", user_prefs.get("favorite_mood"))
+    if mood is not None:
+        if song.get("mood") == mood:
+            score += 30.0
+            reasons.append("mood match (+30.0)")
+        else:
+            reasons.append("mood mismatch (+0.0)")
+
+    def similarity(song_value: float, target: float, maximum_difference: float = 1.0) -> float:
+        difference = abs(song_value - target)
+        return max(0.0, 1.0 - (difference / maximum_difference))
+
+    energy = user_prefs.get("energy", user_prefs.get("target_energy"))
+    if energy is not None:
+        points = similarity(float(song["energy"]), float(energy)) * 20.0
+        score += points
+        reasons.append(f"energy similarity (+{points:.1f})")
+
+    valence = user_prefs.get("valence", user_prefs.get("target_valence"))
+    if valence is not None:
+        points = similarity(float(song["valence"]), float(valence)) * 10.0
+        score += points
+        reasons.append(f"valence similarity (+{points:.1f})")
+
+    tempo = user_prefs.get("tempo_bpm", user_prefs.get("target_tempo_bpm"))
+    if tempo is not None:
+        points = similarity(float(song["tempo_bpm"]), float(tempo), 60.0) * 5.0
+        score += points
+        reasons.append(f"tempo similarity (+{points:.1f})")
+
+    danceability = user_prefs.get("danceability", user_prefs.get("target_danceability"))
+    if danceability is not None:
+        points = similarity(float(song["danceability"]), float(danceability)) * 3.0
+        score += points
+        reasons.append(f"danceability similarity (+{points:.1f})")
+
+    if "likes_acoustic" in user_prefs:
+        acoustic_match = float(song["acousticness"])
+        if not user_prefs["likes_acoustic"]:
+            acoustic_match = 1.0 - acoustic_match
+        points = acoustic_match * 7.0
+        score += points
+        reasons.append(f"acousticness preference (+{points:.1f})")
+
+    return score, reasons
 
 def recommend_songs(user_prefs: Dict, songs: List[Dict], k: int = 5) -> List[Tuple[Dict, float, str]]:
     """
