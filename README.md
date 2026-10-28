@@ -32,14 +32,34 @@ The `Song` object will use these features:
 - `danceability`
 - `acousticness`
 
-The `UserProfile` object will store:
+The updated `UserProfile` will store the user's main categorical preferences and numeric targets:
 
 - `favorite_genre`
 - `favorite_mood`
 - `target_energy`
+- `target_valence`
+- `target_tempo_bpm`
+- `target_danceability`
 - `likes_acoustic`
 
-The recommender will calculate a weighted score for each song. Exact genre and mood matches will receive the strongest points, while numerical features will receive higher scores when they are closer to the user's preferences. Songs will then be sorted by score, and the highest-scoring songs will be recommended.
+This remains a deliberately small, explainable profile. Mood is weighted slightly more than genre because it better represents what the user wants right now, while genre still prevents recommendations from feeling musically unrelated.
+
+### Algorithm Recipe
+
+For every song in `data/songs.csv`:
+
+1. Award 30 points for an exact mood match.
+2. Award 25 points for an exact genre match.
+3. Add up to 20 points for how closely the song's energy matches `target_energy`.
+4. Add up to 10 points for valence similarity.
+5. Add up to 7 points for matching the user's acoustic preference.
+6. Add up to 5 points for tempo similarity.
+7. Add up to 3 points for danceability similarity.
+8. Save the song, total score, and a short explanation of the matching features.
+
+The numerical feature scores will be normalized so that closer values receive more points. After every song has been scored, the system will sort the results from highest to lowest and return the top `k` recommendations.
+
+Potential bias: this system may over-prioritize the user's declared genre and mood, causing it to miss excellent songs from other genres or songs that match the user's current mood but not their favorite genre. The small catalog, fixed labels, and limited profile also bias results toward songs whose features happen to be represented in the dataset. A boolean `likes_acoustic` preference may further oversimplify a preference that is usually gradual rather than all-or-nothing.
 
 ---
 

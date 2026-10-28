@@ -1,0 +1,12 @@
+flowchart LR
+    A[Input: User Preferences\nGenre, mood, target energy,\nacoustic preference, top K] --> B[Load songs.csv]
+    B --> C{For each song in CSV}
+
+    C --> D[Compare song to user preferences]
+    D --> E[Calculate weighted score\nGenre match + mood match\nEnergy and audio-feature similarity]
+    E --> F[Store song, score,\nand explanation]
+    F --> C
+
+    C -->|All songs evaluated| G[Sort songs by score\nhighest to lowest]
+    G --> H[Select top K recommendations]
+    H --> I[Output: Ranked Recommendations\nSong details, scores, explanations]
