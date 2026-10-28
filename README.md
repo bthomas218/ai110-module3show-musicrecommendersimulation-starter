@@ -102,15 +102,25 @@ You can add more tests in `tests/test_recommender.py`.
 
 ## Sample Recommendation Output
 
-Paste a sample of your recommender's output here as a text block so a reader can see what it produces:
+```text
+Loaded songs: 18
 
-```
-# e.g.:
-# User profile: genre=indie, mood=chill, energy=low
-# Recommendations:
-#   1. ...
-#   2. ...
-#   3. ...
+Top recommendations:
+
+Sunrise City - Score: 74.60
+Because: genre match (+25.0); mood match (+30.0); energy similarity (+19.6)
+
+Rooftop Lights - Score: 49.20
+Because: genre mismatch (+0.0); mood match (+30.0); energy similarity (+19.2)
+
+Gym Hero - Score: 42.40
+Because: genre match (+25.0); mood mismatch (+0.0); energy similarity (+17.4)
+
+Night Drive Loop - Score: 19.00
+Because: genre mismatch (+0.0); mood mismatch (+0.0); energy similarity (+19.0)
+
+Velvet Calle - Score: 18.60
+Because: genre mismatch (+0.0); mood mismatch (+0.0); energy similarity (+18.6)
 ```
 
 **Screenshot or video** _(optional)_: <!-- Insert a screenshot or demo video link here -->
